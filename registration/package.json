@@ -1,0 +1,16 @@
+{
+  "name": "registration",
+  "version": "1.0.0",
+  "description": "Quack",
+  "main": "index.js",
+  "scripts": {
+    "register": "ts-node ./src/register.ts"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.5",
+    "discord-interactions": "^3.4.0",
+    "dotenv": "^16.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

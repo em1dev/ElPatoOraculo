@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "**/.env": true,
+        "**/.dev.vars": true,
+    },
+}
