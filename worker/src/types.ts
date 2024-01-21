@@ -15,3 +15,12 @@ export interface DiscordApplicationCommand {
   name: string,
   type: unknown
 }
+
+export interface DiscordWebhookEmbed {
+	image: { url: string }
+}
+
+export interface DiscordWebhookPayload {
+	embeds: Array<DiscordWebhookEmbed>
+}
+

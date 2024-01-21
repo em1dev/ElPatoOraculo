@@ -3,9 +3,11 @@ import nacl from "tweetnacl";
 import { Buffer } from 'node:buffer';
 import { DiscordApplicationCommand, DiscordInteractionRequest, DiscordInteractionResponse } from "./types";
 import { DuckApi } from "./api/duckApi";
+import { pushToWebhook } from "./api/discordWebhook";
 
 export interface Env {
 	PUBLIC_KEY: string
+	WEBHOOK_URL: string | undefined
 }
 
 const verifyRequest = async (body: string, request: Request, env: Env, ctx: ExecutionContext) => {
@@ -23,6 +25,17 @@ const verifyRequest = async (body: string, request: Request, env: Env, ctx: Exec
 }
 
 export default {
+	async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+		if (env.WEBHOOK_URL) {
+			const randomDuckUrl = await DuckApi.getRandomDuckUrl();
+			const payload = {
+				embeds: [
+					{ image: { url: randomDuckUrl } }
+				]
+			};
+			ctx.waitUntil(pushToWebhook(env.WEBHOOK_URL, payload));
+		}
+	},
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const bodyAsText = await request.text();
 
