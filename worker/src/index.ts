@@ -3,6 +3,7 @@ import nacl from "tweetnacl";
 import { Buffer } from 'node:buffer';
 import { DiscordApplicationCommand, DiscordInteractionRequest, DiscordInteractionResponse } from "./types";
 import { DuckApi } from "./api/duckApi";
+import { CatApi } from "./api/catApi";
 import { pushToWebhook } from "./api/discordWebhook";
 
 export interface Env {
@@ -24,15 +25,27 @@ const verifyRequest = async (body: string, request: Request, env: Env, ctx: Exec
 	if (!isValid) throw new Error('invalid request');
 }
 
+async function getImage() {
+	if (Math.random() < 0.001) {
+		return await CatApi.getRandomCatUrl();
+	} else {
+		return await DuckApi.getRandomDuckUrl();
+	}
+}
+
+function getPayload(url: string) {
+	return {
+		embeds: [
+			{ image: { url } }
+		]
+	};
+}
+
 export default {
 	async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
 		if (env.WEBHOOK_URL) {
-			const randomDuckUrl = await DuckApi.getRandomDuckUrl();
-			const payload = {
-				embeds: [
-					{ image: { url: randomDuckUrl } }
-				]
-			};
+			const randomDuckUrl = await getImage();
+			const payload = getPayload(randomDuckUrl);
 			ctx.waitUntil(pushToWebhook(env.WEBHOOK_URL, payload));
 		}
 	},
@@ -65,16 +78,12 @@ export default {
 			const { name } = data as DiscordApplicationCommand;
 
 			let randomDuckUrl = (name === 'quack') 
-				? await DuckApi.getRandomDuckUrl() 
+				? await getImage()
 				: DuckApi.duckErrorCodeUrl(501);
 
 			const resp = {
 				type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
-				data: {
-					embeds: [{
-						image: { url: randomDuckUrl },
-					}]
-				},
+				data: getPayload(randomDuckUrl),
 			};
 
 			return new Response(JSON.stringify(resp), {
