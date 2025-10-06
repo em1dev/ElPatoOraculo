@@ -8,12 +8,12 @@
     "start": "wrangler dev"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240117.0",
-    "typescript": "^5.0.4",
-    "wrangler": "^3.0.0"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.42.0"
   },
   "dependencies": {
-    "discord-interactions": "^3.4.0",
+    "@types/node": "^24.7.0",
+    "discord-interactions": "^4.3.0",
     "tweetnacl": "^1.0.3"
   }
 }
