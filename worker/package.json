@@ -5,8 +5,7 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "start": "wrangler dev",
-    "register": "ts-node ./src/registration"
+    "start": "wrangler dev"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240117.0",
